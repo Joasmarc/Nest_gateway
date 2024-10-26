@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Headers, Param, Post } from '@nestjs/common';
 import { AppService } from './app.service';
 import { CrearUsuarioDto } from './dtos/crear-usuario.dto';
 import { CrearTransaccioneDto } from './dtos/crear-transaccione.dto';
+import { ConfirmarTransaccionesDto } from './dtos/confirmar-transaccione.dto';
 
 @Controller('api')
 export class AppController {
@@ -25,6 +26,11 @@ export class AppController {
     @Post('pagar')
     pagarUsuario(@Body() crearTransaccioneDto: CrearTransaccioneDto) {
         return this.appService.pagarUsuario(crearTransaccioneDto);
+    }
+
+    @Post('confirmar')
+    confirmarUsuario(@Body() confirmarTransaccionesDto: ConfirmarTransaccionesDto, @Headers('authorization') headeers) {
+        return this.appService.confirmarUsuario(confirmarTransaccionesDto, headeers);
     }
 
     @Get('saldos/:documento')
