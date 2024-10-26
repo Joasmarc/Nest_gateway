@@ -22,6 +22,11 @@ export class AppController {
         return this.appService.recargarUsuario(crearTransaccioneDto);
     }
 
+    @Post('pagar')
+    pagarUsuario(@Body() crearTransaccioneDto: CrearTransaccioneDto) {
+        return this.appService.pagarUsuario(crearTransaccioneDto);
+    }
+
     @Get('saldos/:documento')
     consultarSaldo(@Param('documento') documento: String) {
         return this.appService.consultarSaldo(documento);

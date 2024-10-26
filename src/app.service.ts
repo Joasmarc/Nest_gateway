@@ -92,4 +92,25 @@ export class AppService {
             }
         }
     }
+
+    async pagarUsuario(crearTransaccioneDto: CrearTransaccioneDto) {
+
+        let response = this.resExito
+
+        try {
+            const result = await axios.post('http://localhost:3000/transacciones/pagar/', crearTransaccioneDto);
+            if (result.data.mensaje){
+                throw new BadRequestException(result.data.mensaje)
+            }
+            return response;    
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                const errorMessage = error.response?.data?.message || 'Error desconocido en la API';
+                throw new HttpException(errorMessage, error.response?.status || HttpStatus.INTERNAL_SERVER_ERROR);
+            } else {
+                console.error('Error inesperado:', error);
+                throw new BadRequestException(error.response.message);
+            }
+        }
+    }
 }
