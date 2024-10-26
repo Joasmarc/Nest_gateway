@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable, InternalServerErrorException } from '@nestjs/common';
 import axios, { AxiosError } from 'axios';
 import { CrearUsuarioDto } from './dtos/crear-usuario.dto';
 import { RespuestaInterface } from './interfaces/respuesta.interfaces';
@@ -67,4 +67,29 @@ export class AppService {
         }
     }
 
+    async consultarSaldo(documento: String) {
+
+        let response = this.resExito
+
+        try {
+            const result =  await axios.get(`http://localhost:3000/transacciones/${documento}`);
+
+            if (result.data.mensaje){
+                throw new BadRequestException(result.data.mensaje)
+            }
+
+            return {
+                ...response,
+                data: result.data
+            };
+        } catch (error) {
+            if (error instanceof AxiosError) {
+                const errorMessage = error.response?.data?.message || 'Error desconocido en la API';
+                throw new HttpException(errorMessage, error.response?.status || HttpStatus.INTERNAL_SERVER_ERROR);
+            } else {
+                console.error('Error inesperado:', error);
+                throw new BadRequestException(error.response.message);
+            }
+        }
+    }
 }
